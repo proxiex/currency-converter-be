@@ -29,6 +29,15 @@
 
 ```bash
 $ npm install
+
+# setup .env file
+$ cp .env.example .env
+
+# Generate Prisma client
+$ npm run prisma:generate
+
+# Run Prisma migrations
+$ npm run prisma:migrate
 ```
 
 ## Compile and run the project

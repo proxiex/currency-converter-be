@@ -34,18 +34,16 @@ export class AuthService {
   async login(loginDto: LoginDto) {
     const { email, password, nonce } = loginDto;
     
-    // Validate user credentials
     const user = await this.validateUser(email, password);
     
-    // Check if nonce is already used (prevent replay attacks) using Redis
+    // Check if nonce is already used
     const isTokenUsed = await this.redisService.isTokenUsed(nonce);
     
     if (isTokenUsed) {
       throw new BadRequestException('This request has already been processed');
     }
     
-    // Store nonce in Redis to prevent replay attacks
-    // Token will automatically expire after 24 hours (86400 seconds)
+    // Store nonce in Redis
     await this.redisService.storeToken(nonce, user.id, 86400);
     
     // Generate JWT token
@@ -64,8 +62,6 @@ export class AuthService {
       },
     };
   }
-
-  // No need for token cleanup with Redis as tokens will automatically expire
 
   async register(registerDto: RegisterDto) {
     const { email, password, name } = registerDto;
